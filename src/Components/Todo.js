@@ -10,7 +10,7 @@ export default function Todo({ todo, toggleTodo, toggleToDoDelete }) {
   };
 
   return (
-    <label className=" flex justify-between p-1">
+    <label className=" flex justify-between p-1 mt-1">
       {todo.name}
       <div class="flex text-right">
         <input

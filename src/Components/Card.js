@@ -2,16 +2,21 @@ import { useState, useEffect, useRef } from "react";
 import Todolist from "./Todolist";
 import uuid from "react-uuid";
 
-export default function Card() {
-  //   const todos = [
-  //     { id: 1, name: "To Do 1", complete: true },
-  //     { id: 2, name: "To Do 2", complete: false },
-  //     { id: 3, name: "To Do 3", complete: false },
-  //   ];
+const LOCAL_STORAGE_KEY = "todoApp.todos";
 
-  const [todos, setTodos] = useState([]);
+export default function Card() {
+  const storedTodos = localStorage.getItem(LOCAL_STORAGE_KEY)
+    ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+    : [];
+
+  const [todos, setTodos] = useState(storedTodos);
   const todoNameRef = useRef();
 
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
+
+  // handles
   const handleToDo = (e) => {
     const name = todoNameRef.current.value;
     if (name === "") return;
@@ -34,9 +39,18 @@ export default function Card() {
     setTodos(newTodos);
   };
 
+  const removeCompleted = () => {
+    const newTodos = todos.filter((todo) => !todo.completed);
+    console.log(newTodos);
+    setTodos(newTodos);
+  };
+
+  const checkAll = () => {};
+  const deleteAll = () => {};
+
   return (
     <>
-      <div className="flex h-screen justify-center items-center">
+      <div className="flex h-screen justify-center items-center ">
         <div className="w-1/2 text-center rounded p-3 shadow-2xl shadow-gray-500">
           <div className="flex">
             <input
@@ -56,6 +70,26 @@ export default function Card() {
             toggleTodo={toggleTodo}
             toggleToDoDelete={toggleToDoDelete}
           />
+          <div className="flex justify-center">
+            <button
+              className="bg-green-500 rounded p-1 mt-1"
+              onClick={checkAll}
+            >
+              Check All
+            </button>
+            <button
+              className="bg-green-500 rounded p-1 mt-1 ml-1"
+              onClick={removeCompleted}
+            >
+              Clear Completed
+            </button>
+            <button
+              className="bg-green-500 rounded p-1 mt-1 ml-1"
+              onClick={deleteAll}
+            >
+              Delete All
+            </button>
+          </div>
         </div>
       </div>
     </>
